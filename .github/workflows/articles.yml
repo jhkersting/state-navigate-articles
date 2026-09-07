@@ -1,0 +1,50 @@
+name: Refresh and deploy WordPress articles
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 * * * *'
+  push:
+    branches: [main]
+    paths: ['.github/workflows/articles.yml']
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: articles-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch the canonical renderer and theme source
+        uses: actions/checkout@v4
+        with:
+          repository: jhkersting/state-navigate
+          ref: main
+          path: source
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Test renderer
+        working-directory: source
+        run: python3 -m unittest scripts.test_render_wordpress_articles
+      - name: Fetch WordPress and build complete article site
+        working-directory: source
+        run: python3 scripts/render_wordpress_articles.py --all --production --output "$RUNNER_TEMP/articles-site"
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ runner.temp }}/articles-site
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/deploy-pages@v4
+        id: deployment
