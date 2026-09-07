@@ -27,6 +27,8 @@ jobs:
           repository: jhkersting/state-navigate
           ref: main
           path: source
+          ssh-key: ${{ secrets.SOURCE_REPO_SSH_KEY }}
+          persist-credentials: false
       - uses: actions/setup-python@v5
         with:
           python-version: '3.13'

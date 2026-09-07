@@ -28,6 +28,8 @@ Each build generates a fresh deployment artifact. Failed fetches or invalid
 article content stop deployment and leave the previous site intact. Rebuilding
 the full artifact removes unpublished or deleted posts from the next release.
 The source checkout is read-only; Actions does not commit generated files.
+`SOURCE_REPO_SSH_KEY` is a dedicated read-only deploy key for the private
+`state-navigate` repository, not an account-wide token.
 
 `manifest.json` records WordPress sources, public URLs, modification timestamps,
 output paths, hashes and warnings. `sitemap.xml` lists published article URLs.
