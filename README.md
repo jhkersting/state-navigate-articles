@@ -2,8 +2,11 @@
 
 This repository hosts `https://articles.statenavigate.com` through GitHub Pages.
 Authors write and publish in WordPress at `statenavigate.org`. GitHub Actions
-fetches published posts hourly and builds the full site with the canonical
-renderer in `jhkersting/state-navigate`. Shared CSS, scripts, navigation, and logo
+builds the full site with the canonical renderer in `jhkersting/state-navigate`
+when the publishing API dispatches `articles.yml` after a signed WordPress
+notification. Immediate and scheduled publications, public-post edits, and
+unpublishing or deletion trigger a build. There is no recurring article scrape.
+Manual workflow dispatch remains available for recovery. Shared CSS, scripts, navigation, and logo
 assets resolve from `https://projects.statenavigate.com/`.
 
 The HTML retains each WordPress permalink path, with the new article origin for
